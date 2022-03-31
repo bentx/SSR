@@ -8,10 +8,7 @@ import renderer from './renderer';
 import appRoutes from '../src/Routeres/route';
 
 const app = express();
-app.get(
-  /\.(js|css|map|ico)$/,
-  express.static(path.resolve(__dirname, '../dist'))
-);
+app.get(/\.(js|css|map|ico)$/, express.static(path.resolve(__dirname, '../dist')));
 
 app.use('*', (req, res) => {
   const context = {};
@@ -28,6 +25,7 @@ app.use('*', (req, res) => {
         res.send(html);
       })
       .catch((error) => {
+        console.log(error);
         res.status(500).send('An error occurred');
       });
   }

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { fetchMovieData } from '../redux/action';
 import StarRating from '../molecules/Rating';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import ThumbnailCard from '../molecules/ThumbnailCard';
 import CustomPagination from '../molecules/CustomPagination';
 import { FlexPage } from '../atom/style';
@@ -11,6 +11,7 @@ import Genres from '../molecules/Genres';
 
 export const Movie = ({ moviedate, fetchMovieData }) => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const movieState = useSelector((state) => state.movieState);
   const [searchparam, setSearchParam] = useSearchParams();
   const params = [];
@@ -19,14 +20,12 @@ export const Movie = ({ moviedate, fetchMovieData }) => {
 
   useEffect(() => {
     params.push(id);
-    params.push(`[${gen}]`);
+    params.push(gen);
     params.push(rate);
-    if (
-      movieState.genres !== params[1] ||
-      movieState.movieData.page !== Number(params[0]) ||
-      movieState.movieData.rating !== rate
-    ) {
+    if (movieState.genres !== gen || movieState.movieData.page !== Number(id) || movieState.movieData.rating !== rate) {
       fetchMovieData(params);
+    } else {
+      console.log('server side rendered');
     }
   }, [id, gen, rate]);
 
@@ -34,18 +33,22 @@ export const Movie = ({ moviedate, fetchMovieData }) => {
     <>
       <Title>Movies</Title>
       <StarRating />
-      <Genres />
+      <Genres genres={moviedate.genresData} />
       <FlexPage>
         {moviedate.movieData.results &&
-          moviedate.movieData.results.map((c) => (
+          moviedate.movieData.results.map((c, key) => (
             <ThumbnailCard
               key={c.id}
-              id={c.id}
+              id={key}
               poster={c.poster_path}
               title={c.title || c.name}
               date={c.first_air_date || c.release_date}
               media_type={c.media_type}
               vote_average={c.vote_average}
+              type='movie'
+              genres={gen}
+              rate={rate}
+              page={id}
             />
           ))}
       </FlexPage>

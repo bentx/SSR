@@ -5,6 +5,7 @@ import {
   SET_SELECTED_GENRES,
   SET_GENRES,
   SET_GENRES_URL,
+  SEARCH_MOVIE,
 } from '../action';
 
 const initMovieState = {
@@ -14,6 +15,7 @@ const initMovieState = {
   pageNo: '',
   genres: '[]',
   rating: '',
+  searchKey: '',
 };
 
 export default (state = initMovieState, action) => {
@@ -23,7 +25,12 @@ export default (state = initMovieState, action) => {
         ...state,
         movieData: action.payload,
       };
-
+    case SEARCH_MOVIE:
+      return {
+        ...state,
+        movieData: action.payload,
+        searchKey: action.searchkey,
+      };
     case FETCH_MOVIE:
       return {
         ...state,

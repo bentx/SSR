@@ -5,14 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createSearchParams, useSearchParams } from 'react-router-dom';
 import { LRpadding } from '../atom/style';
 
-const Genres = ({ type }) => {
+const Genres = ({ genres }) => {
   const [searchparam, setSearchParam] = useSearchParams();
   const [selgenres, setSelgenres] = useState([]);
-  const genres = useSelector((state) => state.movieState.genresData);
   const gen = searchparam.get('genres');
   const rate = searchparam.get('rating');
 
   useEffect(() => {
+    console.log(genres);
     if (selgenres.toString() !== gen) {
       if (gen.includes(',')) {
         const temp = gen.split(',').map((g) => Number(g));
@@ -22,27 +22,23 @@ const Genres = ({ type }) => {
         setSelgenres(temp);
       }
     }
-  }, [gen]);
+  }, [gen, genres]);
 
   const handleAdd = (genre) => {
     const temp = [...selgenres, genre.id];
     setSelgenres(temp);
-    setSearchParam(
-      createSearchParams({ genres: temp.toString(), rating: rate })
-    );
+    setSearchParam(createSearchParams({ genres: temp.toString(), rating: rate }));
   };
 
   const handleRemove = (genre) => {
     const temp = selgenres.filter((g) => g !== genre.id);
     setSelgenres(temp);
-    setSearchParam(
-      createSearchParams({ genres: temp.toString(), rating: rate })
-    );
+    setSearchParam(createSearchParams({ genres: temp.toString(), rating: rate }));
   };
 
   return (
     <LRpadding>
-      {genres &&
+      {genres[0] &&
         genres.map(
           (genre) =>
             selgenres.includes(genre.id) && (
@@ -57,7 +53,7 @@ const Genres = ({ type }) => {
               />
             )
         )}
-      {genres &&
+      {genres[0] &&
         genres.map(
           (genre) =>
             !selgenres.includes(genre.id) && (

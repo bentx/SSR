@@ -6,6 +6,7 @@ export const FETCH_MOVIE = 'FETCH_MOVIE';
 export const SET_SELECTED_GENRES = 'SET_SELECTED_GENRES';
 export const SET_GENRES = 'SET_GENRES';
 export const SET_GENRES_URL = 'SET_GENRES_URL';
+export const SEARCH_MOVIE = 'SEARCH_MOVIE';
 
 export const fetchMovieData = (params) => async (dispath) => {
   if (params.length === 1) {
@@ -27,8 +28,9 @@ export const fetchMovieData = (params) => async (dispath) => {
       payload: 2,
     });
     dispath({
-      type: FETCH_ARTILCLES,
+      type: SEARCH_MOVIE,
       payload: data,
+      searchkey: params[1],
     });
   } else {
     dispath({
@@ -36,7 +38,7 @@ export const fetchMovieData = (params) => async (dispath) => {
       payload: 1,
     });
 
-    const url = `https://api.themoviedb.org/3/discover/movie?api_key=92e2d369d2678331be36143172cb7a86&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${params[0]}&with_genres=${params[1]}&vote_average.gte=${params[2]}`;
+    const url = `https://api.themoviedb.org/3/discover/movie?api_key=92e2d369d2678331be36143172cb7a86&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=true&page=${params[0]}&with_genres=${params[1]}&vote_average.gte=${params[2]}`;
     const { data } = await axios.get(url);
 
     const genresurl = `https://api.themoviedb.org/3/genre/movie/list?api_key=92e2d369d2678331be36143172cb7a86&language=en-US`;

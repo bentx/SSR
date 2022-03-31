@@ -9,16 +9,20 @@ import { FlexPage } from '../atom/style';
 import { ThemeProvider } from '@material-ui/core';
 import SearchArea from '../molecules/SearchArea';
 
-export const Search = ({ moviedate, fetchMovieData }) => {
+export const Search = ({ moviedate, page, fetchMovieData }) => {
   const { id } = useParams();
   const [searchparam, setSearchParam] = useSearchParams();
   const params = [];
-  const search = searchparam.get('search');
+  const search = searchparam.get('search') || 'god';
 
   useEffect(() => {
-    params.push(id);
-    params.push(search);
-    fetchMovieData(params);
+    if (Number(id) !== moviedate.movieData.page || moviedate.searchKey !== search || page !== 2) {
+      params.push(id);
+      params.push(search);
+      fetchMovieData(params);
+    } else {
+      console.log('Server Side Rendered');
+    }
   }, []);
 
   return (
@@ -27,15 +31,18 @@ export const Search = ({ moviedate, fetchMovieData }) => {
         <SearchArea />
         <FlexPage>
           {moviedate.movieData.results &&
-            moviedate.movieData.results.map((c) => (
+            moviedate.movieData.results.map((c, key) => (
               <ThumbnailCard
                 key={c.id}
-                id={c.id}
+                id={key}
                 poster={c.poster_path}
                 title={c.title || c.name}
                 date={c.first_air_date || c.release_date}
                 media_type='movie'
                 vote_average={c.vote_average}
+                type='search'
+                page={id}
+                search={search}
               />
             ))}
         </FlexPage>
@@ -54,6 +61,7 @@ const loadData = (store, param) => {
 const mapStateToProps = (state) => {
   return {
     moviedate: state.movieState,
+    page: state.routeState,
   };
 };
 

@@ -28,7 +28,16 @@ export default function SimpleBottomNavigation() {
   const navigate = useNavigate();
 
   return (
-    <BottomNavigation value={value} showLabels className={classes.root}>
+    <BottomNavigation
+      value={value}
+      showLabels
+      style={{
+        width: '100%',
+        position: 'fixed',
+        bottom: 0,
+        backgroundColor: '#2d313a',
+        zIndex: 100,
+      }}>
       <BottomNavigationAction
         style={{ color: 'white' }}
         label='Trending'

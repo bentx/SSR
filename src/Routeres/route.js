@@ -2,6 +2,7 @@ import Movie from '../pages/movie';
 import Search from '../pages/search';
 import React from 'react';
 import Trending from '../pages/trending';
+import Details from '../pages/details';
 
 export default [
   {
@@ -22,5 +23,11 @@ export default [
     element: <Trending.component />,
     loadData: (store, path) =>
       Trending.loadData(store, path.split('/').slice(2)),
+  },
+  {
+    path: '/details/:id',
+    element: <Details.component />,
+    loadData: (store, path) =>
+      Details.loadData(store, path.split('/').slice(2)[0].split('?')),
   },
 ];

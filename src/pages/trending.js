@@ -7,15 +7,18 @@ import CustomPagination from '../molecules/CustomPagination';
 import { FlexPage } from '../atom/style';
 import { Title } from '../atom/fields';
 
-export const Trending = ({ movie, fetchMovieData }) => {
+export const Trending = ({ movie, page, fetchMovieData }) => {
   const { id } = useParams();
-  const page = useSelector((state) => state.movieState.isLoaded);
 
   const params = [];
   params.push(id);
 
   useEffect(() => {
-    fetchMovieData(params);
+    if (Number(id) !== movie.movieData.page || page !== 0) {
+      fetchMovieData(params);
+    } else {
+      console.log('Server Side Rendered');
+    }
   }, [id]);
 
   return (
@@ -23,15 +26,17 @@ export const Trending = ({ movie, fetchMovieData }) => {
       <Title>Trendnig</Title>
       <FlexPage>
         {movie.movieData.results &&
-          movie.movieData.results.map((c) => (
+          movie.movieData.results.map((c, key) => (
             <ThumbnailCard
               key={c.id}
-              id={c.id}
+              id={key}
               poster={c.poster_path}
               title={c.title || c.name}
               date={c.first_air_date || c.release_date}
               media_type={c.media_type}
               vote_average={c.vote_average}
+              type='trending'
+              page={id}
             />
           ))}
       </FlexPage>
@@ -42,6 +47,7 @@ export const Trending = ({ movie, fetchMovieData }) => {
 const mapStateToProps = (state) => {
   return {
     movie: state.movieState,
+    page: state.routeState,
   };
 };
 

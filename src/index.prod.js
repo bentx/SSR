@@ -13,21 +13,14 @@ import './index.css';
 
 const state = window.__PRELOADED_STATE__;
 delete window.__PRELOADED_STATE__;
-const persistConfig = {
-  key: 'persistData3',
-  storage,
-};
-const rootPersistReducer = persistReducer(persistConfig, reducers);
-const store = createStore(rootPersistReducer, state, applyMiddleware(thunk));
-const persistor = persistStore(store);
+
+const store = createStore(reducers, state, applyMiddleware(thunk));
 
 ReactDom.hydrate(
   <Provider store={store}>
-    <PersistGate persistor={persistor}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </PersistGate>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </Provider>,
   document.getElementById('app')
 );

@@ -11,19 +11,7 @@ import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { PersistGate } from 'redux-persist/integration/react';
 
-const persistConfig = {
-  key: 'persistData',
-  storage,
-};
-const rootPersistReducer = persistReducer(persistConfig, reducers);
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-const store = createStore(
-  reducers,
-  {},
-  composeEnhancers(applyMiddleware(thunk))
-);
-
-const persistor = persistStore(store);
+const store = createStore(reducers, {}, applyMiddleware(thunk));
 
 ReactDom.render(
   <Provider store={store}>
